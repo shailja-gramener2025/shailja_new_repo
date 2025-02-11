@@ -1,0 +1,31 @@
+name: Daily Commit Automation
+
+on:
+  schedule:
+    - cron: '42 12 * * *'  # Runs daily at 12:42 PM UTC
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  daily_commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Git (shailja.chaurasia@gramener.com)
+        run: |
+          git config --local user.name "Automated Commit"
+          git config --local user.email "shailja.chaurasia@gramener.com"
+
+      - name: Ensure daily_commit.txt exists
+        run: touch daily_commit.txt  # Ensure the file exists
+
+      - name: Append timestamp and commit changes
+        run: |
+          echo "Daily commit on $(date)" >> daily_commit.txt
+          git add daily_commit.txt
+          git commit -m "Daily commit on $(date)"
+          git push
